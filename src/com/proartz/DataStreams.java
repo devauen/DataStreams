@@ -35,29 +35,29 @@ public class DataStreams {
 //            }
 //        }
 
-//        DataInputStream input = null;
-//
-//        double prize;
-//        int unit;
-//        String description;
-//        double total = 0;
-//
-//        try{
-//            input = new DataInputStream(new BufferedInputStream(
-//                        new FileInputStream(dataName)));
-//
-//            while(true) {
-//                prize = input.readDouble();
-//                unit = input.readInt();
-//                description = input.readUTF();
-//                System.out.format("You bought %d units of %s for %.2f.%n",
-//                        unit, description, prize);
-//
-//                total += prize * unit;
-//            }
-//        } catch(EOFException e) {
-//
-//        }
-//        System.out.format("Total: %.2f", total);
+        ObjectInputStream input = null;
+
+        BigDecimal price;
+        int unit;
+        String description;
+        BigDecimal total = new BigDecimal(0);
+
+        try{
+            input = new ObjectInputStream(new BufferedInputStream(
+                        new FileInputStream(dataName)));
+
+            while(true) {
+                price = (BigDecimal)input.readObject();
+                unit = input.readInt();
+                description = input.readUTF();
+                System.out.format("You bought %d units of %s for %.2f.%n",
+                        unit, description, price);
+
+                total = total.add(price.multiply(new BigDecimal(unit)));
+            }
+        } catch(EOFException e) {
+
+        }
+        System.out.format("Total: %.2f", total);
     }
 }
